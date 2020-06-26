@@ -11,9 +11,6 @@ pipeline {
     maven 'apache-maven-3.6.1'
   }
   stages {
-    dir("helloworld") {
-      sh 'pwd'
-    }
     stage('PR') {
       when { not { branch 'master' } }
       steps {
@@ -35,5 +32,6 @@ pipeline {
 }
 
 def mvn_phases(phase) {
+  cd 'helloworld'
   sh 'mvn clean $phase'
 }

@@ -32,7 +32,5 @@ pipeline {
 }
 
 def mvn_phases(phase) {
-  sh 'pwd'
-  sh 'cd helloworld && mvn clean $phase'
-  sh 'pwd'
+  sh "cd helloworld && mvn clean ${phase}"
 }

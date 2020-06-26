@@ -11,7 +11,9 @@ pipeline {
     maven 'apache-maven-3.6.1'
   }
   stages {
-    dir("helloworld")
+    dir("helloworld") {
+      sh 'pwd'
+    }
     stage('PR') {
       when { not { branch 'master' } }
       steps {

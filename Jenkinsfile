@@ -1,10 +1,10 @@
 pipeline {
   agent any
   options {
-    buildDiscarder(logRotator(numToKeepStr: '1')),
-    disableConcurrentBuilds(),
-    skipStagesAfterUnstable(),
-    timeout(time: 1, unit: 'HOURS'),
+    buildDiscarder(logRotator(numToKeepStr: '1'))
+    disableConcurrentBuilds()
+    skipStagesAfterUnstable()
+    timeout(time: 1, unit: 'HOURS')
     timestamps()
   }
   tools {

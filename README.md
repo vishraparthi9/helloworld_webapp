@@ -8,8 +8,6 @@ mvn archetype:generate -DgroupId=com.vishraparthi.webapp -DartifactId=helloworld
 
 ## Github webhook
 
-[Receive Github webhooks on Jenkins without public IP](https://webhookrelay.com/blog/2017/11/23/github-jenkins-guide/)
-
 Install Jenkins in Mac using following commands:
 
  * Install the latest Weekly version: brew install jenkins
@@ -27,3 +25,6 @@ Install Webhook relay:
  CLI authentication
  * Use it: `relay login -k token-key-here -s token-secret-here`
  * Start forwarding webhooks to jenkins: `relay forward --bucket github-jenkins http://localhost:8080/github-webhook/`
+
+For more info, check [Receive Github webhooks on Jenkins without public
+IP](https://webhookrelay.com/blog/2017/11/23/github-jenkins-guide/)

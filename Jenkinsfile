@@ -9,6 +9,10 @@ pipeline {
   }
   environment {
     PATH = "$PATH:/usr/local/bin/"
+    GIT_COMMIT_SHORT = sh(
+      script: "printf \$(git rev-parse --short ${GIT_COMMIT})",
+      returnStdout: true
+    )
   }
   tools {
     maven 'apache-maven-3.6.1'
@@ -41,10 +45,7 @@ pipeline {
     }
     stage('Tar') {
       steps {
-        script {
-          def commit_id = getGitCommit()
-        }
-        sh "tar -czf helloworld-${commit_id}.tar.gz /tmp/cookbook_artifacts ./helloworld/target/helloworld.war"
+        sh "tar -czf helloworld-${GIT_COMMIT_SHORT}.tar.gz /tmp/cookbook_artifacts ./helloworld/target/helloworld.war"
       }
     }
   }
@@ -52,12 +53,4 @@ pipeline {
 
 def mvn_phases(phase) {
   sh "cd helloworld && mvn clean ${phase}"
-}
-
-def getGitCommit() {
-    git_commit = sh (
-        script: 'git rev-parse HEAD',
-        returnStdout: true
-    ).trim()
-    return git_commit
 }

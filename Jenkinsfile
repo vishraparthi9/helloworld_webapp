@@ -31,6 +31,11 @@ pipeline {
         mvn_phases('package')
       }
     }
+    stage('Checkout') {
+      steps {
+          git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
+      }
+    }
   }
 }
 

@@ -1,4 +1,3 @@
-def commit_id=getGitCommit()
 pipeline {
   agent any
   options {
@@ -41,8 +40,8 @@ pipeline {
       }
     }
     stage('Tar') {
+      def commit_id=getGitCommit()
       steps {
-        
         sh "tar -czf helloworld-${commit_id}.tar.gz /tmp/cookbook_artifacts ./helloworld/target/helloworld.war"
       }
     }

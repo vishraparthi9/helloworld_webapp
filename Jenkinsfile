@@ -29,6 +29,7 @@ pipeline {
       when { branch 'master' }
       steps {
         mvn_phases('package')
+        sh "chef -v"
       }
     }
   }

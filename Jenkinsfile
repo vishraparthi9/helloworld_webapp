@@ -7,6 +7,9 @@ pipeline {
     timeout(time: 1, unit: 'HOURS')
     timestamps()
   }
+  environment {
+    PATH = "$PATH:/usr/local/bin/"
+  }
   tools {
     maven 'apache-maven-3.6.1'
   }

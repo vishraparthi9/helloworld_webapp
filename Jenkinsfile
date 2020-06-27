@@ -33,8 +33,9 @@ pipeline {
     }
     stage('Checkout') {
       steps {
-          sh "mkdir cookbooks"
-          git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git', relativeTargetDir: './cookbooks/'
+        dir('cookbooks') {
+          git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
+        }
       }
     }
   }

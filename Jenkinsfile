@@ -38,6 +38,7 @@ pipeline {
     stage('Checkout_CD') {
       steps {
         dir('deployment_code') {
+          sh "rm -rf *"
           git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
           sh '''
             rm -rf /tmp/chef_artifacts

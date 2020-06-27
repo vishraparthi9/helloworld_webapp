@@ -37,15 +37,20 @@ pipeline {
     }
     stage('Checkout_CD') {
       steps {
-        dir('cookbooks') {
+        dir('deployment_code') {
           git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
-          sh "chef install && chef export /tmp/ --force"
+          sh '''
+            rm -rf chef_artifacts
+            mkdir chef_artifacts
+            chef install 
+            chef export ./chef_artifacts/
+          '''
         }
       }
     }
     stage('Tar') {
       steps {
-        sh "tar -czf helloworld-${GIT_COMMIT_SHORT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/ cookbook_artifacts"
+        sh "tar -czf helloworld-${GIT_COMMIT_SHORT}.tar.gz -C helloworld/target/ helloworld.war -C deployment_code ."
       }
     }
   }

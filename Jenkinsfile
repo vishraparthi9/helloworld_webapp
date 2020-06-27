@@ -41,7 +41,7 @@ pipeline {
     }
     stage('Tar') {
       steps {
-        commit_id=getGitCommit()
+        def commit_id=getGitCommit()
         sh "tar -czf helloworld-commit_id.tar.gz /tmp/cookbook_artifacts ./helloworld/target/helloworld.war"
       }
     }

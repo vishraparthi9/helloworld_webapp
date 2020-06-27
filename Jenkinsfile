@@ -34,7 +34,7 @@ pipeline {
     stage('Checkout') {
       steps {
           sh "mkdir cookbooks"
-          git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git', path: './cookbooks/'
+          git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git', relativeTargetDir: './cookbooks/'
       }
     }
   }
@@ -42,4 +42,12 @@ pipeline {
 
 def mvn_phases(phase) {
   sh "cd helloworld && mvn clean ${phase}"
+}
+
+def getGitCommit() {
+    git_commit = sh (
+        script: 'git rev-parse HEAD',
+        returnStdout: true
+    ).trim()
+    return git_commit
 }

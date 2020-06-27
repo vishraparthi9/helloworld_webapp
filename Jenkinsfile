@@ -31,11 +31,17 @@ pipeline {
         mvn_phases('package')
       }
     }
-    stage('Checkout') {
+    stage('Checkout_CD') {
       steps {
         dir('cookbooks') {
           git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
+          sh "chef install && chef export /tmp/"
         }
+      }
+    }
+    stage('Tar') {
+      steps {
+        sh "tar -czf /tmp/cookbook_artifacts ./helloworld/target/helloworld.war"
       }
     }
   }

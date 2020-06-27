@@ -35,7 +35,7 @@ pipeline {
       steps {
         dir('cookbooks') {
           git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
-          sh "chef install && chef export /tmp/"
+          sh "chef install && chef export /tmp/ --force"
         }
       }
     }

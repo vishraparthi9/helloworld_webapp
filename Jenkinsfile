@@ -45,7 +45,7 @@ pipeline {
     }
     stage('Tar') {
       steps {
-        sh "tar -czf helloworld-${GIT_COMMIT_SHORT}.tar.gz /tmp/cookbook_artifacts ./helloworld/target/helloworld.war"
+        sh "tar -czf helloworld-${GIT_COMMIT_SHORT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/ cookbook_artifacts"
       }
     }
   }

@@ -65,7 +65,7 @@ pipeline {
       steps {
 
         sh '''
-          CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id` &&
+          CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
           tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ .
         '''
       }

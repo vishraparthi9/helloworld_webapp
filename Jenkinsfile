@@ -100,7 +100,6 @@ pipeline {
           aws s3 cp s3://vraparthi-cicd-testing/helloworld_chef/helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz /tmp/
           cd /tmp/
           sudo tar -xzf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz
-          cd helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}
           python3 stacks.py
         '''
       }

@@ -53,7 +53,7 @@ pipeline {
       steps {
         dir('deployment_code') {
           sh 'rm -rf *'
-          git branch: master, url: 'git@github.com:vishraparthi9/aws_deployment.git'
+          git branch: 'master', url: 'git@github.com:vishraparthi9/aws_deployment.git'
           sh '''
             cd aws_deployment
             mvn clean verify

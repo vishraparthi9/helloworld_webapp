@@ -61,12 +61,14 @@ pipeline {
         }
       }
     }
-    stage('Tar') {
+    stage('Tar_and_Upload_to_S3') {
       steps {
 
         sh '''
           CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
           tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ .
+          export AWS_PROFILE=pg
+          aws s3 cp helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz s3://vraparthi-cicd-testing/helloworld_chef/
         '''
       }
     }

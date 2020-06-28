@@ -8,7 +8,7 @@ pipeline {
     timestamps()
   }
   environment {
-    PATH = "$PATH:/usr/local/bin/"
+    PATH = "/usr/local/opt/gnu-tar/libexec/gnubin:$PATH:/usr/local/bin/"
     CI_GIT_COMMIT = sh(
       script: "printf \$(git rev-parse --short ${GIT_COMMIT})",
       returnStdout: true

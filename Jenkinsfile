@@ -57,7 +57,11 @@ pipeline {
           sh '''
             mvn clean verify
             cat target/classes/git.properties | jq -r '."git.commit.id.abbrev"' > /tmp/cd_git_commit.id
-            CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
+          '''
+          script {
+            env.CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
+          }
+          sh '''
             ## Running second time to replace user_data.sh variables for GIT commits
             mvn clean verify -DCI_GIT_COMMIT=${CI_GIT_COMMIT} -DCD_GIT_COMMIT=${CD_GIT_COMMIT}
             mv target/classes/user_data.sh .
@@ -72,11 +76,32 @@ pipeline {
       steps {
 
         sh '''
-          chmod -R 777 deployment_code
-          CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
+          #CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
           tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ . -C /tmp/deployment_artifacts/ .
           export AWS_PROFILE=pg
           aws s3 cp helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz s3://vraparthi-cicd-testing/helloworld_chef/
+        '''
+      }
+    }
+    stage('Approval_for_CD') {
+      steps {
+        script {
+          if (env.BRANCH_NAME == "master" ) {
+            def userInput = input(id: 'confirm', message: 'Continue with deployment?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Continue with deployment', name: 'confirm'] ])
+          }
+        }
+      }
+    }
+    stage('CD_Dev') {
+      steps {
+        sh '''
+          #CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
+          export AWS_PROFILE=pg
+          aws s3 cp s3://vraparthi-cicd-testing/helloworld_chef/helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz /tmp/
+          cd /tmp/
+          tar -xzf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz
+          cd helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}
+          python3 stacks.py
         '''
       }
     }

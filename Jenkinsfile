@@ -55,7 +55,6 @@ pipeline {
           sh 'rm -rf *'
           git branch: 'master', url: 'git@github.com:vishraparthi9/aws_deployment.git'
           sh '''
-            cd aws_deployment
             mvn clean verify
             cat target/classes/git.properties | jq -r '."git.commit.id.abbrev"' > /tmp/cd_git_commit.id'
           '''

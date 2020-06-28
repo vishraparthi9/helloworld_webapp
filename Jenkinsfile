@@ -59,7 +59,7 @@ pipeline {
             cat target/classes/git.properties | jq -r '."git.commit.id.abbrev"' > /tmp/cd_git_commit.id
           '''
           script {
-            env.CD_GIT_COMMIT=${cat /tmp/cd_git_commit.id}
+            env.CD_GIT_COMMIT=sh(script:'cat /tmp/cd_git_commit.id', returnStdout: true).trim()
           }
           sh '''
             ## Running second time to replace user_data.sh variables for GIT commits

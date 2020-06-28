@@ -61,7 +61,9 @@ pipeline {
             ## Running second time to replace user_data.sh variables for GIT commits
             mvn clean verify -DCI_GIT_COMMIT=${CI_GIT_COMMIT} -DCD_GIT_COMMIT=${CD_GIT_COMMIT}
             mv target/classes/user_data.sh .
-            rm -rf README.md pom.xml target
+            rm -rf /tmp/deployment_artifacts
+            mkdir /tmp/deployment_artifacts
+            cp -rf config stacks.py templates user_data.sh /tmp/deployment_artifacts
           '''
         }
       }
@@ -72,7 +74,7 @@ pipeline {
         sh '''
           chmod -R 777 deployment_code
           CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`
-          tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ . -C deployment_code/ .
+          tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ . -C /tmp/deployment_artifacts/ .
           export AWS_PROFILE=pg
           aws s3 cp helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz s3://vraparthi-cicd-testing/helloworld_chef/
         '''

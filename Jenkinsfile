@@ -54,16 +54,20 @@ pipeline {
         dir('deployment_code') {
           sh 'rm -rf *'
           git branch: master, url: 'git@github.com:vishraparthi9/aws_deployment.git'
-          sh 'mvn clean verify && \
-          cat target/classes/git.properties | jq -r '."git.commit.id.abbrev"' > /tmp/cd_git_commit.id'
+          sh '''
+            mvn clean verify
+            cat target/classes/git.properties | jq -r '."git.commit.id.abbrev"' > /tmp/cd_git_commit.id'
+          '''
         }
       }
     }
     stage('Tar') {
       steps {
 
-        sh "CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id` && \
-        tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ ."
+        sh '''
+          CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id` &&
+          tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ .
+        '''
       }
     }
   }

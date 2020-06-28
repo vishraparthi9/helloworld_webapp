@@ -36,6 +36,7 @@ pipeline {
       }
     }
     stage('checkout_cookbooks') {
+      when { branch 'master' }
       steps {
         dir('cookbook_code') {
           sh "rm -rf *"
@@ -50,6 +51,7 @@ pipeline {
       }
     }
     stage('checkout_deployment') {
+      when { branch 'master' }
       steps {
         dir('deployment_code') {
           sh 'rm -rf *'
@@ -73,6 +75,7 @@ pipeline {
       }
     }
     stage('Tar_and_Upload_to_S3') {
+      when { branch 'master' }
       steps {
 
         sh '''
@@ -93,6 +96,7 @@ pipeline {
       }
     }
     stage('CD_Dev') {
+      when { branch 'master' }
       steps {
         sh '''
           #CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id`

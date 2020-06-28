@@ -9,7 +9,7 @@ pipeline {
   }
   environment {
     PATH = "$PATH:/usr/local/bin/"
-    GIT_COMMIT_SHORT = sh(
+    CI_GIT_COMMIT = sh(
       script: "printf \$(git rev-parse --short ${GIT_COMMIT})",
       returnStdout: true
     )
@@ -35,9 +35,9 @@ pipeline {
         mvn_phases('package')
       }
     }
-    stage('Checkout_CD') {
+    stage('checkout_cookbooks') {
       steps {
-        dir('deployment_code') {
+        dir('cookbook_code') {
           sh "rm -rf *"
           git branch: 'master', url: 'git@github.com:vishraparthi9/tomcat.git'
           sh '''
@@ -49,9 +49,21 @@ pipeline {
         }
       }
     }
+    stage('checkout_deployment') {
+      steps {
+        dir('deployment_code') {
+          sh 'rm -rf *'
+          git branch: master, url: 'git@github.com:vishraparthi9/aws_deployment.git'
+          sh 'mvn clean verify && \
+          cat target/classes/git.properties | jq -r '."git.commit.id.abbrev"' > /tmp/cd_git_commit.id'
+        }
+      }
+    }
     stage('Tar') {
       steps {
-        sh "tar -czf helloworld-${GIT_COMMIT_SHORT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ ."
+
+        sh "CD_GIT_COMMIT=`cat /tmp/cd_git_commit.id` && \
+        tar -czf helloworld-${CI_GIT_COMMIT}-${CD_GIT_COMMIT}.tar.gz -C helloworld/target/ helloworld.war -C /tmp/chef_artifacts/ ."
       }
     }
   }
